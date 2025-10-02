@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "text-contextifyer"
+version = "0.1.0"
+description = "Enrich markdown text with ontology-based hyperlinks."
+authors = ["Robin Franken <robin.franken@epfl.ch>"]
+packages = [{ include = "text_contextifyer", from = "src" }]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+rdflib = "^7.0.0"
+rapidfuzz = "^3.10.0"
+pydantic = "^2.8.0"
+fastapi = "^0.109.0"
+uvicorn = "^0.23.2"
+sparqlwrapper = "^2.0.0"
+pydantic-settings = "^2.11.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0.0"
