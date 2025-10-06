@@ -31,7 +31,7 @@ class OntologyManager:
             sparql.setReturnFormat("xml")
             results_graph = sparql.query().convert()  # This is already an rdflib.Graph
             self.graph += results_graph  # merge graphs instead of parse(data=...)
-        
+        print(len(self.graph), "triples loaded from", len(self.named_graphs), "graphs.")
         # Build predicate->label map
         self._build_predicate_label_map()
 

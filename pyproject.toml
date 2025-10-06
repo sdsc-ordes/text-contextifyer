@@ -17,3 +17,6 @@ pydantic-settings = "^2.11.0"
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.0.0"
+
+[tool.poetry.scripts]
+text-contextifyer = "text_contextifyer.cli:main"
