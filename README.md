@@ -26,4 +26,4 @@ to run tests or
 ```bash
  PYTHONPATH=src poetry run uvicorn text_contextifyer.api.main:app --reload
 ```
-to start the microservice
+to start the microservice which can then be checked used interactively at http://127.0.0.1:8000/docs
