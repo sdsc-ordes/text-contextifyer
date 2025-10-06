@@ -17,21 +17,13 @@ Output:
 [Computer science](someurl-about-computerscience.org) and [geology](some-otherurl-related-to-geology.org) are fascinating fields.
 
 ## Usage
+Make sure your SPARQL endpoint is running and configured in the .env file. Then run:
 ```bash
 poetry install
 pytest
-
----
-
-## 📄 `src/text_contextifyer/config.py`
-```python
-from pydantic import BaseSettings
-
-
-class Settings(BaseSettings):
-    # Path or endpoint to ontology
-    ontology_files: list[str] = ["tests/data/example.ttl"]
-
-    class Config:
-        env_prefix = "CTXFY_"
-        case_sensitive = False
+```
+to run tests or
+```bash
+ PYTHONPATH=src poetry run uvicorn text_contextifyer.api.main:app --reload
+```
+to start the microservice
