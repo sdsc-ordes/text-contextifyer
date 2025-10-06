@@ -11,15 +11,10 @@ Turn plain Markdown into enriched Markdown with ontology-based hyperlinks.
 ## Example
 
 Input:
-Computer science and geology are fascinating fields.
-
+Computer science and Geology are fascinating fields.
 
 Output:
-Computer
- science and
-Geology
- are fascinating fields.
-
+[Computer science](someurl-about-computerscience.org) and [geology](some-otherurl-related-to-geology.org) are fascinating fields.
 
 ## Usage
 ```bash
