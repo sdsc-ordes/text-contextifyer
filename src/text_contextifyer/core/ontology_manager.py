@@ -1,5 +1,6 @@
 from rdflib import Graph, URIRef, RDFS, SKOS
 from SPARQLWrapper import SPARQLWrapper, JSON
+import urllib.error
 from text_contextifyer.config import settings
 
 class OntologyManager:
@@ -23,15 +24,25 @@ class OntologyManager:
         if self.username and self.password:
             sparql.setCredentials(self.username, self.password)
 
-        for graph_uri in self.named_graphs:
-            sparql.setQuery(f"""
-            CONSTRUCT {{ ?s ?p ?o }}
-            WHERE {{ GRAPH <{graph_uri}> {{ ?s ?p ?o }} }}
-            """)
-            sparql.setReturnFormat("xml")
-            results_graph = sparql.query().convert()  # This is already an rdflib.Graph
-            self.graph += results_graph  # merge graphs instead of parse(data=...)
-        print(len(self.graph), "triples loaded from", len(self.named_graphs), "graphs.")
+        try:
+            for graph_uri in self.named_graphs:
+                sparql.setQuery(f"""
+                CONSTRUCT {{ ?s ?p ?o }}
+                WHERE {{ GRAPH <{graph_uri}> {{ ?s ?p ?o }} }}
+                """)
+                sparql.setReturnFormat("xml")
+                results_graph = sparql.query().convert()  # This is already an rdflib.Graph
+                self.graph += results_graph  # merge graphs instead of parse(data=...)
+            print(len(self.graph), "triples loaded from", len(self.named_graphs), "graphs.")
+        except (ConnectionRefusedError, urllib.error.URLError):
+            raise ConnectionError(
+                f"\nERROR: Could not connect to GraphDB at {self.sparql_endpoint}\n"
+                "Please ensure that:\n"
+                "1. GraphDB is running and accessible\n"
+                "2. The SPARQL endpoint URL in your .env file is correct\n"
+                "3. The specified port is not blocked by a firewall\n"
+                "\nTo start GraphDB, please refer to your GraphDB installation documentation."
+            ) from None
         # Build predicate->label map
         self._build_predicate_label_map()
 

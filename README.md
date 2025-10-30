@@ -20,13 +20,50 @@ Output:
 ```
 
 ## Usage
-Make sure your SPARQL endpoint is running and configured in the .env file. Then run:
+
+First, make sure your GraphDB SPARQL endpoint is running and create a `.env` file based on `.env.dist` with your configuration.
+
+### Running Locally
+
+To run tests:
 ```bash
 poetry install
 pytest
 ```
-to run tests or
+
+To start the microservice locally:
 ```bash
- PYTHONPATH=src poetry run uvicorn text_contextifyer.api.main:app --reload
+PYTHONPATH=src poetry run uvicorn text_contextifyer.api.main:app --reload
 ```
-to start the microservice which can then be checked used interactively at http://127.0.0.1:8000/docs
+
+### Running with Docker
+
+1. Build the Docker image:
+```bash
+docker build -t text-contextifyer .
+```
+
+2. Run the container (choose one of the following methods):
+
+   a. If GraphDB is running on your host machine:
+   ```bash
+   docker run --rm --network=host --env-file .env text-contextifyer
+   ```
+
+   b. Or using port mapping and Docker's host resolution:
+   ```bash
+   # First, modify your .env file to use host.docker.internal instead of localhost:
+   # ONTOLOGY_SPARQL_ENDPOINT=http://host.docker.internal:7200/repositories/your-repo
+   docker run --rm -p 8000:8000 --env-file .env text-contextifyer
+   ```
+
+The API documentation will be available at http://localhost:8000/docs
+
+### Testing the API
+
+Once the service is running, you can test it with curl (make the ontology you point to contains labels that appear in the text you are contextifying):
+```bash
+curl -X POST http://localhost:8000/contextify \
+  -H "Content-Type: application/json" \
+  -d '{"markdown":"Computer science and Geology are fascinating fields."}'
+```
