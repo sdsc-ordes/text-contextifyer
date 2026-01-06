@@ -1,11 +1,12 @@
 from pydantic_settings import BaseSettings
-from typing import List
+from typing import List, Optional
 
 class Settings(BaseSettings):
     ONTOLOGY_SPARQL_ENDPOINT: str
-    GRAPHDB_USERNAME: str
-    GRAPHDB_PASSWORD: str
-    NAMED_GRAPHS: str = ""  # <-- string for .env parsing
+    SPARQL_USERNAME: Optional[str] = None
+    SPARQL_PASSWORD: Optional[str] = None
+    NAMED_GRAPHS: str = ""  # Comma-separated list of named graph URIs (optional)
+    USE_DEFAULT_GRAPH: bool = True  # If true and NAMED_GRAPHS is empty, query the default graph
 
     class Config:
         env_file = ".env"

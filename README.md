@@ -3,10 +3,11 @@
 Turn plain Markdown into enriched Markdown with ontology-based hyperlinks. This tool supports small-medium sized ontologies only right now, as they need to be loaded into memory. 
 
 ## Features
-- Load an RDF/OWL ontology into memory from a SPARQL endpoint.
+- Load an RDF/OWL ontology from any SPARQL 1.1 compliant endpoint (Apache Jena, GraphDB, Virtuoso, etc.)
 - Extract labels (`rdfs:label`, `skos:prefLabel`)
 - Match words in Markdown text against ontology terms (fuzzy or exact)
 - Replace matches with hyperlinks in the markdown file supplied
+- Support for both named graphs and default graph queries
 
 ## Example
 
@@ -21,7 +22,29 @@ Output:
 
 ## Usage
 
-First, make sure your GraphDB SPARQL endpoint is running and create a `.env` file based on `.env.dist` with your configuration.
+First, make sure your SPARQL endpoint is running and create a `.env` file based on `.env.dist` with your configuration.
+
+### Configuration
+
+The application supports any SPARQL 1.1 compliant endpoint. Configure your `.env` file:
+
+```bash
+# Required: Your SPARQL endpoint URL
+ONTOLOGY_SPARQL_ENDPOINT=http://localhost:3030/myDataset/sparql  # Apache Jena example
+# or
+ONTOLOGY_SPARQL_ENDPOINT=http://localhost:7200/repositories/myRepo  # GraphDB example
+
+# Optional: Authentication (if required)
+SPARQL_USERNAME=admin
+SPARQL_PASSWORD=password
+
+# Graph selection (choose one):
+# Option 1: Query specific named graphs
+NAMED_GRAPHS=http://example.org/graph1,http://example.org/graph2
+
+# Option 2: Query the default graph (leave NAMED_GRAPHS empty)
+USE_DEFAULT_GRAPH=true
+```
 
 ### Running Locally
 
