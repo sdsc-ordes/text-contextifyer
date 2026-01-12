@@ -22,11 +22,11 @@ COPY src/ src/
 RUN poetry install --only-root --no-interaction --no-ansi
 
 # Expose port for FastAPI
-EXPOSE 8000
 
 # Set environment variables
 ENV PYTHONPATH=/app/src
 ENV PYTHONUNBUFFERED=1
-
+ENV PORT=8001
+EXPOSE ${PORT}
 # Run FastAPI server
-CMD ["poetry", "run", "uvicorn", "text_contextifyer.api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["sh", "-c", "poetry run uvicorn text_contextifyer.api.main:app --host 0.0.0.0 --port ${PORT}"]

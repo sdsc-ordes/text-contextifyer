@@ -12,7 +12,7 @@ logger = logging.getLogger("main")
 
 app = FastAPI(title="Text Contextifyer API")
 
-# Load ontology from GraphDB at startup
+# Load ontology from SPARQL endpoint at startup
 ontology_manager = OntologyManager()
 ontology_manager.load_ontologies()
 
