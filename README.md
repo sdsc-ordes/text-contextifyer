@@ -63,30 +63,41 @@ PYTHONPATH=src poetry run uvicorn text_contextifyer.api.main:app --reload
 
 1. Build the Docker image:
 ```bash
-docker build -t text-contextifyer .
+docker build -t text-contextifyer:latest .
 ```
 
 2. Run the container (choose one of the following methods):
 
-   a. If GraphDB is running on your host machine:
+   **Option A: Using host network mode (Linux - Recommended)**
+   
+   If your SPARQL endpoint is running on your host machine (e.g., `localhost:3030`), use host network mode:
    ```bash
-   docker run --rm --network=host --env-file .env text-contextifyer
+   docker run --rm --network host --env-file .env -e PORT=8001 text-contextifyer:latest
    ```
+   
+   The service will be available at `http://localhost:8001`
+   
+   Note: With `--network host`, you need to specify a custom `PORT` if 8000 is already in use.
 
-   b. Or using port mapping and Docker's host resolution:
+   **Option B: Using port mapping (Mac/Windows)**
+   
+   For Mac/Windows, use `host.docker.internal` to access host services:
    ```bash
-   # First, modify your .env file to use host.docker.internal instead of localhost:
-   # ONTOLOGY_SPARQL_ENDPOINT=http://host.docker.internal:7200/repositories/your-repo
-   docker run --rm -p 8000:8000 --env-file .env text-contextifyer
+   docker run --rm -p 8001:8000 --env-file .env \
+     -e ONTOLOGY_SPARQL_ENDPOINT=http://host.docker.internal:3030/arema/sparql \
+     text-contextifyer:latest
    ```
+   
+   The service will be available at `http://localhost:8001`
 
-The API documentation will be available at http://localhost:8000/docs
+The API documentation will be available at the URL shown above with `/docs` appended (e.g., `http://localhost:8001/docs`)
 
 ### Testing the API
 
-Once the service is running, you can test it with curl (make the ontology you point to contains labels that appear in the text you are contextifying):
+Once the service is running, you can test it with curl (make sure the ontology you point to contains labels that appear in the text you are contextifying):
 ```bash
-curl -X POST http://localhost:8000/contextify \
+# Adjust port number if you used a different port
+curl -X POST http://localhost:8001/contextify \
   -H "Content-Type: application/json" \
   -d '{"markdown":"Computer science and Geology are fascinating fields."}'
 ```
