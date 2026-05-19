@@ -16,6 +16,8 @@
             python311
             poetry
             docker
+            minikube
+            kubectl
           ];
 
           shellHook = ''
