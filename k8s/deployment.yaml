@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: text-contextifyer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: text-contextifyer
+  template:
+    metadata:
+      labels:
+        app: text-contextifyer
+    spec:
+      containers:
+        - name: text-contextifyer
+          image: ghcr.io/sdsc-ordes/text-contextifyer:latest
+          ports:
+            - containerPort: 8001
+          env:
+            - name: ONTOLOGY_SPARQL_ENDPOINT
+              value: http://fuseki:3030/arema/sparql
+            - name: SPARQL_USERNAME
+              value: admin
+            - name: SPARQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: arema-secrets
+                  key: fuseki-password
+            - name: USE_DEFAULT_GRAPH
+              value: "true"

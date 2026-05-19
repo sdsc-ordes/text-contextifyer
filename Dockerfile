@@ -1,6 +1,8 @@
 # Use Python 3.11 as base image
 FROM python:3.11-slim
 
+LABEL org.opencontainers.image.source=https://github.com/sdsc-ordes/text-contextifyer
+
 # Set working directory
 WORKDIR /app
 
